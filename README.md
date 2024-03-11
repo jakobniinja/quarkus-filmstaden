@@ -20,3 +20,6 @@ mvn quarkus:dev
 - JUnit
 - Mockito
 - Rest-assured
+
+## Lessons:
+mapstruct autogenerate all interface implementations
