@@ -60,10 +60,6 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jdbc-postgresql</artifactId>
-
-
-
-
     </dependency>
     <dependency>
       <groupId>org.mapstruct</groupId>
@@ -209,6 +205,4 @@
       </build>
     </profile>
   </profiles>
-
-
 </project>
