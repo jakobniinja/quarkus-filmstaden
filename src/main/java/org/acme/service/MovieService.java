@@ -1,6 +1,5 @@
 package org.acme.service;
 
-import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
@@ -25,11 +24,10 @@ public class MovieService {
     this.movieRepository = movieRepository;
   }
 
-  public List<MovieDto> retrieveAllMovies(int pageNo, int pageSize) {
+  public List<MovieDto> retrieveAllMovies() {
 
-    List<Movie> movies = movieRepository.findAll().page(Page.of(pageNo, pageSize)).list();
-    List<MovieDto> moviesDto = movies.stream().map(m -> movieMapper.toDto(m)).collect(Collectors.toList());
-    return moviesDto;
+    List<Movie> movies = movieRepository.findAll().list();
+    return movies.stream().map(m -> movieMapper.toDto(m)).collect(Collectors.toList());
   }
 
 

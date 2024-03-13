@@ -2,17 +2,14 @@ package org.acme.resource;
 
 import io.quarkus.resteasy.reactive.links.InjectRestLinks;
 import io.quarkus.resteasy.reactive.links.RestLink;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
@@ -28,13 +25,11 @@ public class MovieResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @RestLink(rel = "all-movies")
+  @RestLink(rel = "all-movies") // Can this be removed along with quarkus-resteasy-reactive-links?
   @InjectRestLinks
-  public List<MovieDto> movies(
-      @DefaultValue("0") @QueryParam(value = "pageNo") int pageNo,
-      @DefaultValue("10") @QueryParam(value = "pageSize") int pageSize) {
+  public List<MovieDto> movies() {
 
-    return movieService.retrieveAllMovies(pageNo, pageSize);
+    return movieService.retrieveAllMovies();
   }
 
   @Transactional
