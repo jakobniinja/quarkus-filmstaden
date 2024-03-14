@@ -4,10 +4,11 @@ public enum Status {
 
   INIT, PENDING, ACTIVE, CANCEL, EXPIRED;
 
-  public boolean paid() {
+
+  public boolean available() {
     return switch (this) {
-      case INIT, EXPIRED, CANCEL -> false;
-      case ACTIVE, PENDING -> true;
+      case INIT -> true;
+      default -> false;
     };
   }
 }
