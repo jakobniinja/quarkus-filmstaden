@@ -23,3 +23,8 @@ mvn quarkus:dev
 
 ## Lessons:
 mapstruct autogenerate all interface implementations
+
+
+### TODO
+- Introduce NoTicketsAvailableException
+- Introduce buyTickets(int n)
