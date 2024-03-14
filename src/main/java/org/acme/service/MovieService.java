@@ -3,9 +3,8 @@ package org.acme.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.acme.dto.MovieDto;
 import org.acme.exception.DuplicateResourceException;
 import org.acme.mapper.MovieMapper;
@@ -24,20 +23,18 @@ public class MovieService {
     this.movieRepository = movieRepository;
   }
 
-  public List<MovieDto> retrieveAllMovies() {
+  public List<MovieDto> get() {
 
     List<Movie> movies = movieRepository.findAll().list();
-    return movies.stream().map(m -> movieMapper.toDto(m)).collect(Collectors.toList());
+    return movies.stream().map(m -> movieMapper.toDto(m)).toList();
   }
 
 
-  public MovieDto saveNewMovie(MovieDto movieDto) throws DuplicateResourceException {
+  public MovieDto create(MovieDto movieDto) throws DuplicateResourceException {
 
-    Optional<Movie> opt = movieRepository.findByTitle(movieDto.getTitle());
+    if (movieRepository.findFirst(movieDto.getTitle()).isPresent()) {
 
-    if (!opt.isEmpty()) {
-
-      throw new DuplicateResourceException("movie with title " + movieDto.getTitle() + " already exists");
+      throw new DuplicateResourceException("Movie with title " + movieDto.getTitle() + " already exists");
     }
 
     Movie movie = movieMapper.toEntity(movieDto);
@@ -51,6 +48,13 @@ public class MovieService {
 
       throw new NotFoundException();
     }
+  }
+
+  public List<Movie> search(String keyword) {
+    if (keyword == null || keyword.trim().isEmpty()) {
+      return Collections.emptyList();
+    }
+    return movieRepository.findAny(keyword);
   }
 
 
