@@ -27,4 +27,6 @@ mapstruct autogenerate all interface implementations
 
 ### TODO
 - Introduce NoTicketsAvailableException
-- Introduce buyTickets(int n)
+
+- Introduce cancelTicket
+- Introduce movieOfTheWeek
