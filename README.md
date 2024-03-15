@@ -11,12 +11,11 @@
 - Rest-assured
 
 ## Lessons:
+
 mapstruct autogenerate all interface implementations
 
-
 ### TODO
-- Introduce movieOfTheWeek
-- 
+- ~~Introduce movieOfTheWeek~~
 - ~~Introduce NoTicketsAvailableException~~
 - ~~Introduce cancelTicket~~
 
