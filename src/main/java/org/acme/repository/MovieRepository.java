@@ -21,4 +21,8 @@ public class MovieRepository implements PanacheRepository<Movie> {
 
     return Stream.concat(desc.stream(), title.stream()).distinct().toList();
   }
+
+  public Movie find(String id) {
+    return find("id = ?1", id).firstResult();
+  }
 }

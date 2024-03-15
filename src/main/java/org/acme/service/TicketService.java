@@ -34,8 +34,7 @@ public class TicketService {
   public void cancel() {
 
     tickets.stream()
-        .filter(ticket -> ticket.getStatus().pending())
-        .findFirst()
+        .filter(ticket -> ticket.getStatus().pending()).findFirst()
         .orElseThrow(() -> new NoTicketsAvailable("Cancellation Failed: Unable to find any tickets!"))
         .setStatus(Status.INIT);
   }

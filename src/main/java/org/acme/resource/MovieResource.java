@@ -50,11 +50,23 @@ public class MovieResource {
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @Path("/{keyword}")
+  @Path("search/{keyword}")
   public Response find(@PathParam("keyword") String keyword) {
 
     List<Movie> movies = movieService.search(keyword);
 
     return Response.status(Status.OK).entity(movies).build();
+  }
+
+
+  @GET
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("special")
+  public Response special() {
+
+    Movie movie = movieService.getSpecial();
+
+    return Response.status(Status.OK).entity(movie).build();
   }
 }

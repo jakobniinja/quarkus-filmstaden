@@ -1,26 +1,35 @@
 package org.acme.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.acme.dto.MovieDto;
 import org.acme.exception.DuplicateResource;
 import org.acme.mapper.MovieMapper;
 import org.acme.model.Movie;
 import org.acme.repository.MovieRepository;
+import org.acme.util.NumberGenerator;
 
 @ApplicationScoped
 public class MovieService {
 
-  MovieRepository movieRepository;
+  private MovieRepository movieRepository;
 
-  @Inject
-  MovieMapper movieMapper;
+  private MovieMapper movieMapper;
 
-  public MovieService(MovieRepository movieRepository) {
+  private NumberGenerator numberGenerator;
+
+  public MovieService(MovieRepository movieRepository, MovieMapper movieMapper) {
     this.movieRepository = movieRepository;
+    this.movieMapper = movieMapper;
+    this.numberGenerator = new NumberGenerator();
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    executor.scheduleAtFixedRate(numberGenerator::updateRandomNumber, 0, 5, TimeUnit.MINUTES);
   }
 
   public List<MovieDto> get() {
@@ -54,5 +63,9 @@ public class MovieService {
       return Collections.emptyList();
     }
     return movieRepository.findAny(keyword);
+  }
+
+  public Movie getSpecial() {
+    return movieRepository.find(numberGenerator.getNumber());
   }
 }
