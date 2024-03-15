@@ -6,9 +6,10 @@ public enum Status {
 
 
   public boolean available() {
-    return switch (this) {
-      case INIT -> true;
-      default -> false;
-    };
+    return this == Status.INIT;
+  }
+
+  public boolean pending() {
+    return this == Status.PENDING;
   }
 }

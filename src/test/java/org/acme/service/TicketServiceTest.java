@@ -3,6 +3,7 @@ package org.acme.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.function.Predicate;
+import org.acme.exception.NoTicketsAvailable;
 import org.acme.model.Status;
 import org.acme.model.Ticket;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,9 @@ import org.junit.jupiter.api.Test;
 
 class TicketServiceTest {
 
-  private static final String FULL_SHOW = "Can't process your reservation, due to fully booked show!";
+  private static final String FULL_SHOW = "Reservation Failed: The show is fully booked.";
+
+  private static final String NO_TICKETS = "Cancellation Failed: Unable to find any tickets!";
 
   private static final Predicate<Ticket> isInit = ticket -> ticket.getStatus() == Status.INIT;
 
@@ -43,4 +46,28 @@ class TicketServiceTest {
     assertEquals(0, ticketService.getTickets().filter(isInit).count());
   }
 
+  @Test
+  void onNoTicketCancel() {
+    NoTicketsAvailable exception = assertThrows(NoTicketsAvailable.class, () -> ticketService.cancel());
+
+    assertEquals(NO_TICKETS, exception.getMessage());
+  }
+
+  @Test
+  void onCancelTicket() {
+    ticketService.buyTickets();
+
+    long count = ticketService.getTickets().count();
+
+    assertEquals(3, count);
+  }
+
+
+  @Test
+  void onBuyThenCancel() {
+    ticketService.buyTickets();
+    ticketService.cancel();
+
+    assertEquals(4, ticketService.getTickets().count());
+  }
 }
