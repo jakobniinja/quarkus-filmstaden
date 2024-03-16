@@ -15,7 +15,4 @@
 mapstruct autogenerate all interface implementations
 
 ### TODO
-- ~~Introduce movieOfTheWeek~~
-- ~~Introduce NoTicketsAvailableException~~
-- ~~Introduce cancelTicket~~
-
+- Prepare Demo
