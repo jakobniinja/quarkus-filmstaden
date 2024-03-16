@@ -10,7 +10,7 @@ public class Ticket {
 
   public Ticket(String column) {
     this.theater = Theater.HERON_CITY;
-    this.status = Status.INIT;
+    this.status = Status.FREE;
     this.seat = new Seat(1, column);
   }
 

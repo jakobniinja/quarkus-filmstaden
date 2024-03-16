@@ -15,7 +15,7 @@ class TicketServiceTest {
 
   private static final String NO_TICKETS = "Cancellation Failed: Unable to find any tickets!";
 
-  private static final Predicate<Ticket> isInit = ticket -> ticket.getStatus() == Status.INIT;
+  private static final Predicate<Ticket> isInit = ticket -> ticket.getStatus() == Status.FREE;
 
   private static final String FIRST_SEAT = "1A";
 
@@ -30,7 +30,7 @@ class TicketServiceTest {
   void onInitBuy() {
     String firstTicket = ticketService.buyTickets();
 
-    assertEquals(3, ticketService.getTickets().filter(isInit).count());
+    assertEquals(3, ticketService.getTickets().stream().filter(isInit).count());
 
     assertEquals(FIRST_SEAT, firstTicket);
   }
@@ -38,17 +38,17 @@ class TicketServiceTest {
   @Test
   void onNoTicketsLeft() {
 
-    ticketService.getTickets().forEach(t -> t.setStatus(Status.PENDING));
+    ticketService.getTickets().forEach(t -> t.setStatus(Status.BUSY));
     RuntimeException exception = assertThrows(RuntimeException.class, ticketService::buyTickets);
 
     assertEquals(FULL_SHOW, exception.getMessage());
 
-    assertEquals(0, ticketService.getTickets().filter(isInit).count());
+    assertEquals(0, ticketService.getTickets().stream().filter(isInit).count());
   }
 
   @Test
   void onNoTicketCancel() {
-    NoTicketsAvailable exception = assertThrows(NoTicketsAvailable.class, () -> ticketService.cancel());
+    NoTicketsAvailable exception = assertThrows(NoTicketsAvailable.class, () -> ticketService.cancelTickets());
 
     assertEquals(NO_TICKETS, exception.getMessage());
   }
@@ -57,7 +57,7 @@ class TicketServiceTest {
   void onCancelTicket() {
     ticketService.buyTickets();
 
-    long count = ticketService.getTickets().count();
+    long count = ticketService.getTickets().size();
 
     assertEquals(3, count);
   }
@@ -66,8 +66,8 @@ class TicketServiceTest {
   @Test
   void onBuyThenCancel() {
     ticketService.buyTickets();
-    ticketService.cancel();
+    ticketService.cancelTickets();
 
-    assertEquals(4, ticketService.getTickets().count());
+    assertEquals(4, ticketService.getTickets().size());
   }
 }

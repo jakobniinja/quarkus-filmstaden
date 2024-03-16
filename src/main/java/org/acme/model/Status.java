@@ -2,14 +2,14 @@ package org.acme.model;
 
 public enum Status {
 
-  INIT, PENDING, ACTIVE, CANCEL, EXPIRED;
+  FREE, BUSY;
 
 
   public boolean available() {
-    return this == Status.INIT;
+    return this == Status.FREE;
   }
 
-  public boolean pending() {
-    return this == Status.PENDING;
+  public boolean busy() {
+    return this == Status.BUSY;
   }
 }

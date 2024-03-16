@@ -1,8 +1,5 @@
 package org.acme.resource;
 
-import io.quarkus.resteasy.reactive.links.InjectRestLinks;
-import io.quarkus.resteasy.reactive.links.RestLink;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -21,24 +18,25 @@ import org.acme.model.Movie;
 import org.acme.service.MovieService;
 
 @Path("/movies")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class MovieResource {
 
-  @Inject
-  MovieService movieService;
+  private final MovieService movieService;
+
+  public MovieResource(MovieService movieService) {
+    this.movieService = movieService;
+  }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @RestLink(rel = "all-movies") // Can this be removed along with quarkus-resteasy-reactive-links?
-  @InjectRestLinks
   public List<MovieDto> movies() {
 
-    return movieService.get();
+    return movieService.getMovies();
   }
 
   @Transactional
+  @Path("create")
   @POST
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
   public Response newMovie(@Valid MovieDto movieDto) throws DuplicateResource {
 
     MovieDto newMovieDto = movieService.create(movieDto);
@@ -48,8 +46,6 @@ public class MovieResource {
 
 
   @GET
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
   @Path("search/{keyword}")
   public Response find(@PathParam("keyword") String keyword) {
 
@@ -60,8 +56,6 @@ public class MovieResource {
 
 
   @GET
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
   @Path("special")
   public Response special() {
 

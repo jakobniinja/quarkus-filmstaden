@@ -32,7 +32,7 @@ public class MovieService {
     executor.scheduleAtFixedRate(numberGenerator::updateRandomNumber, 0, 5, TimeUnit.MINUTES);
   }
 
-  public List<MovieDto> get() {
+  public List<MovieDto> getMovies() {
 
     List<Movie> movies = movieRepository.findAll().list();
     return movies.stream().map(m -> movieMapper.toDto(m)).toList();
@@ -48,7 +48,7 @@ public class MovieService {
     Movie movie = movieMapper.toEntity(movieDto);
     movieRepository.persist(movie);
 
-    if (movieRepository.isPersistent(movie)) {
+    if (existsInDb(movie)) {
 
       return movieMapper.toDto(movie);
 
@@ -67,5 +67,10 @@ public class MovieService {
 
   public Movie getSpecial() {
     return movieRepository.find(numberGenerator.getNumber());
+  }
+
+  public boolean existsInDb(Movie movie) {
+
+    return movieRepository.isPersistent(movie);
   }
 }

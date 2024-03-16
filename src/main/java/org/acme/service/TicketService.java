@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Stream;
 import org.acme.exception.NoTicketsAvailable;
 import org.acme.model.Status;
 import org.acme.model.Ticket;
@@ -21,8 +20,8 @@ public class TicketService {
     tickets.add(new Ticket("D"));
   }
 
-  public Stream<Ticket> getTickets() {
-    return tickets.stream().filter(t -> t.getStatus().available());
+  public List<Ticket> getTickets() {
+    return tickets.stream().filter(t -> t.getStatus().available()).toList();
   }
 
   public String buyTickets() {
@@ -31,17 +30,15 @@ public class TicketService {
         .orElseThrow(() -> new NoTicketsAvailable("Reservation Failed: The show is fully booked."));
   }
 
-  public void cancel() {
+  public void cancelTickets() {
 
-    tickets.stream()
-        .filter(ticket -> ticket.getStatus().pending()).findFirst()
-        .orElseThrow(() -> new NoTicketsAvailable("Cancellation Failed: Unable to find any tickets!"))
-        .setStatus(Status.INIT);
+    tickets.stream().filter(ticket -> ticket.getStatus().busy()).findFirst()
+        .orElseThrow(() -> new NoTicketsAvailable("Cancellation Failed: Unable to find any tickets!")).setStatus(Status.FREE);
   }
 
   private Function<Ticket, String> reservSeat() {
     return ticket -> {
-      ticket.setStatus(Status.PENDING);
+      ticket.setStatus(Status.BUSY);
       return ticket.getSeat().getNumber();
     };
   }
